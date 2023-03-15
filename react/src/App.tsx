@@ -1,12 +1,11 @@
 import { useState } from "react";
-import AuthorSDKClient from "./author-sdk-client/AuthorSDKClient";
-import AuthorSample from "./author/AuthorSample";
+import AuthorSampleCustomConfig from "./author/AuthorSampleCustomConfig";
 
 function App() {
   return (
     <div className="App">
       {/* <AuthorSample /> */}
-      <AuthorSDKClient />
+      <AuthorSampleCustomConfig />
     </div>
   );
 }

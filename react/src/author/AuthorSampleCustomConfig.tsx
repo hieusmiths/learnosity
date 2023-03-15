@@ -1,14 +1,40 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 
-const AuthorSample = () => {
+const AuthorSampleCustomConfig = () => {
   const [val, setVal] = useState();
   const ref = useRef(false);
 
   useEffect(() => {
     (() => {
       axios
-        .get("http://localhost:3000/items")
+        .post("http://localhost:3000/signature", {
+          data: {
+            service: "author",
+            config: {
+              mode: "item_list",
+              config: {
+                item_edit: {
+                  item: {
+                    reference: {
+                      show: true,
+                      edit: false,
+                    },
+                    dynamic_content: true,
+                    shareed_passage: true,
+                    enable_audio_recording: true,
+                  },
+                },
+              },
+              user: {
+                id: "demos-site",
+                firstname: "Demos",
+                lastname: "User",
+                email: "demos@learnosity.com",
+              },
+            },
+          },
+        })
         .then((res) => {
           setVal(res.data);
         })
@@ -23,6 +49,7 @@ const AuthorSample = () => {
 
     if (window.LearnosityAuthor) {
       ref.current = true;
+      console.log("window.LearnosityAuthor ___ INIT");
 
       const authorApp = window.LearnosityAuthor.init(val, {
         readyListener() {
@@ -42,7 +69,7 @@ const AuthorSample = () => {
       });
     }
   }, [val]);
-
+  
   return (
     <div>
       <div id="learnosity-author"></div>
@@ -50,4 +77,4 @@ const AuthorSample = () => {
   );
 };
 
-export default AuthorSample;
+export default AuthorSampleCustomConfig;
