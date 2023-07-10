@@ -82,6 +82,45 @@ app.post("/signature", (req, res) => {
   return res.json(signature);
 });
 
+
+app.get("/active", async (req, res) => {
+  const learnositySdk = new Learnosity();
+
+  const dataAPIRequest = learnositySdk.init(
+    "data",
+    {
+      consumer_key: config.consumerKey, // Load key from config.js
+      domain: req.hostname, // Set the domain (from line 20)
+    },
+    config.consumerSecret,
+    {
+      include: {
+        activities: ["activity_id"],
+      },
+      limit: 3,
+      references: ["HIEU__CUSTOM"],
+    },
+    "get"
+  );
+
+  const form = new FormData();
+  /* Note: the same can be accomplished with using  URLSearchParams  
+   (https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)
+    const form = newURLSearchParams()
+   */
+  form.append("security", dataAPIRequest.security);
+  form.append("request", dataAPIRequest.request);
+  form.append("action", dataAPIRequest.action);
+
+  const url = "https://data.learnosity.com/v2022.3.LTS/itembank/activities";
+
+  const data = await axios.post(url, form, {
+    headers: form.getHeaders(),
+  });
+
+  return res.json(data.data);
+});
+
 app.listen(3000, function () {
   // Run the web application. Set the port here (3000).
   console.log("Example app listening on port 3000!");
